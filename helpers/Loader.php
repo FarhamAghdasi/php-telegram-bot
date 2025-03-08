@@ -3,7 +3,7 @@
 
 class Loader {
     public static function loadCommands($bot, $chatId, $userId, $text) {
-        $commandDir = __DIR__ . '/../commands/';
+        $commandDir = realpath(__DIR__ . '/../commands') . '/';
         $commandFiles = glob($commandDir . '*.php');
 
         foreach ($commandFiles as $file) {

@@ -1,10 +1,17 @@
 <?php
 // main.php - Optimized Telegram Bot
 
+// check script errors
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once 'config/config.php';
 require_once 'core/Bot.php';
 require_once 'helpers/Loader.php';
 require_once 'helpers/Logger.php';
+require_once './core/Maintenance.php';
+
+Maintenance::check();
 
 $log = new Logger('bot.log');
 $bot = new Bot(BOT_TOKEN);
