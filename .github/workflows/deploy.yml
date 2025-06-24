@@ -13,20 +13,34 @@ jobs:
       FTP_SERVER: ${{ secrets.FTP_SERVER }}
       FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
       FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      FTP_PATH: ${{ secrets.FTP_PATH }}
 
     steps:
-    - name: Checkout repository
+    - name: 📥 Checkout repository
       uses: actions/checkout@v4
 
-    - name: Inject secrets into .env
+    - name: ⚙️ Set up PHP with Composer
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: curl, mbstring, gd, dom, fileinfo, json
+        tools: composer
+
+    - name: 📦 Install QRCode library (Composer)
+      run: composer require endroid/qr-code
+
+    - name: 🧩 Prepare QRCode classes for no-composer hosting
+      run: php prepare_qrcode.php
+
+    - name: 🔐 Inject secrets into .env
       run: |
         echo "BOT_TOKEN=${BOT_TOKEN}" >> .env
         echo "ALLOWED_USER_IDS=${ALLOWED_USER_IDS}" >> .env
 
-    - name: Build project
+    - name: 🏗️ Build project
       run: python3 build.py
 
-    - name: Upload to FTP
+    - name: 🚀 Upload to FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.0.0
       with:
         server: ${{ secrets.FTP_SERVER }}
