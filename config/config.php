@@ -1,25 +1,26 @@
 <?php
 // config/config.php
 
-// Telegram Bot Token
-define('BOT_TOKEN', 'get from @botfather');
+function loadEnvFile($file) {
+    if (!file_exists($file)) return;
 
-// List of Allowed User IDs
-define('ALLOWED_USER_IDS', ['0000000', '1111111']);
+    $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        list($name, $value) = explode('=', $line, 2);
+        putenv(trim($name) . '=' . trim($value));
+    }
+}
 
-// MAINTENANCE MODE
-define('MAINTENANCE_MODE', false);
+loadEnvFile(__DIR__ . '/../.env');
 
-// URL of the iframe extractor script
-define('IFRAME_EXTRACTOR_URL', 'https://api.farhamaghdasi.ir/iframe-get'); // My Free API
+define('BOT_TOKEN', getenv('BOT_TOKEN'));
+define('ALLOWED_USER_IDS', explode(',', getenv('ALLOWED_USER_IDS')));
 
-// Required Telegram Channels for Access
-define('REQUIRED_CHANNELS', [
-    '-', // Your Channel Address
-]);
-
-// Creator
-define('CREATOR_NAME', 'Your Name');
-define('CREATOR_INSTAGRAM', 'https://instagram.com/yourprofile');
-define('CREATOR_WEBSITE', 'https://yourwebsite.com');
-define('COPYRIGHT_TEXT', '© 2025 All rights reserved.');
+define('MAINTENANCE_MODE', getenv('MAINTENANCE_MODE') === 'true');
+define('IFRAME_EXTRACTOR_URL', getenv('IFRAME_EXTRACTOR_URL'));
+define('REQUIRED_CHANNELS', ['-']);
+define('CREATOR_NAME', getenv('CREATOR_NAME'));
+define('CREATOR_INSTAGRAM', getenv('CREATOR_INSTAGRAM'));
+define('CREATOR_WEBSITE', getenv('CREATOR_WEBSITE'));
+define('COPYRIGHT_TEXT', getenv('COPYRIGHT_TEXT'));

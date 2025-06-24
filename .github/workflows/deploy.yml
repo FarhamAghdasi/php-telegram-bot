@@ -1,0 +1,36 @@
+name: Deploy PHP Telegram Bot
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+      ALLOWED_USER_IDS: ${{ secrets.ALLOWED_USER_IDS }}
+      FTP_SERVER: ${{ secrets.FTP_SERVER }}
+      FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+      FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Inject secrets into .env
+      run: |
+        echo "BOT_TOKEN=${BOT_TOKEN}" >> .env
+        echo "ALLOWED_USER_IDS=${ALLOWED_USER_IDS}" >> .env
+
+    - name: Build project
+      run: python3 build.py
+
+    - name: Upload to FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.0.0
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./build/
+        server-dir: ${{ secrets.FTP_PATH }}/
