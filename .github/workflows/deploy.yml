@@ -1,4 +1,4 @@
-name: Deploy PHP Telegram Bot
+name: 🚀 Deploy PHP Telegram Bot
 
 on:
   workflow_dispatch:
@@ -10,16 +10,15 @@ jobs:
     env:
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
       ALLOWED_USER_IDS: ${{ secrets.ALLOWED_USER_IDS }}
-      FTP_SERVER: ${{ secrets.FTP_SERVER }}
-      FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-      FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-      FTP_PATH: ${{ secrets.FTP_PATH }}
       DB_HOST: ${{ secrets.DB_HOST }}
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_USERNAME: ${{ secrets.DB_USERNAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-
+      FTP_SERVER: ${{ secrets.FTP_SERVER }}
+      FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+      FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      FTP_PATH: ${{ secrets.FTP_PATH }}
 
     steps:
     - name: 📥 Checkout repository
@@ -32,23 +31,24 @@ jobs:
         extensions: curl, mbstring, gd, dom, fileinfo, json
         tools: composer
 
-    - name: 📦 Install QRCode library (Composer)
+    - name: 📦 Install QRCode library
       run: composer require endroid/qr-code
 
     - name: 🧩 Prepare QRCode classes
       run: php prepare_qrcode.php
 
-    - name: 🔐 Inject secrets into .env
+    - name: 🔐 Create .env from template + inject secrets
       run: |
-        echo "BOT_TOKEN=${BOT_TOKEN}" > .env
+        cp .env.template .env
+        echo "BOT_TOKEN=${BOT_TOKEN}" >> .env
         echo "ALLOWED_USER_IDS=${ALLOWED_USER_IDS}" >> .env
         echo "DB_HOST=${DB_HOST}" >> .env
         echo "DB_NAME=${DB_NAME}" >> .env
         echo "DB_USERNAME=${DB_USERNAME}" >> .env
         echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
         echo "WEBHOOK_URL=${WEBHOOK_URL}" >> .env
-    
-    - name: 🚀 Upload via FTP (delete old files except JSONs)
+
+    - name: 🚀 Upload to FTP (clean all except data/*.json)
       uses: SamKirkland/FTP-Deploy-Action@v4.0.0
       with:
         server: ${{ secrets.FTP_SERVER }}
@@ -58,4 +58,4 @@ jobs:
         server-dir: ${{ secrets.FTP_PATH }}/
         exclude: |
           data/*.json
-          delete: true
+        delete: true
