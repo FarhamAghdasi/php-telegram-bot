@@ -3,8 +3,8 @@
 
 require_once __DIR__ . '/../helpers/Logger.php';
 
-use DOMDocument;
-use DOMXPath;
+// use DOMDocument;
+// use DOMXPath;
 
 class SearchImageCommand {
     private $bot;

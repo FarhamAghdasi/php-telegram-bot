@@ -64,4 +64,23 @@ class Bot {
 
         return json_decode($response, true);
     }
+
+    public function getUserProfilePhotos($userId, $offset = 0, $limit = 1) {
+        $url = "https://api.telegram.org/bot{$this->token}/getUserProfilePhotos";
+        $data = [
+            'user_id' => $userId,
+            'offset' => $offset,
+            'limit' => $limit
+        ];
+    
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+    
+        return json_decode($response, true);
+    }
 }

@@ -2,7 +2,7 @@
 // commands/QRCodeCommand.php
 
 require_once __DIR__ . '/../helpers/Logger.php';
-require_once __DIR__ . '/../libs/qr/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
@@ -59,6 +59,7 @@ TXT;
 
     private function generateQr($chatId, $content) {
         try {
+            Logger::info("Generating QR code for content: $content");
             $qr = new QrCode($content);
             $writer = new PngWriter();
             $result = $writer->write($qr);

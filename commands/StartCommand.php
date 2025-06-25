@@ -1,5 +1,5 @@
 <?php
-// start.php - Optimized Start Command with Dynamic Command Listing
+// commands/StartCommand.php
 
 require_once __DIR__ . '/../helpers/Logger.php';
 
@@ -12,7 +12,7 @@ class StartCommand {
 
     public function execute($chatId, $userId, $text) {
         if (strpos($text, '/start') === 0) {
-                        
+            Logger::info("Start command executed for chat $chatId by user $userId");
             $currentDateTime = date('Y-m-d H:i:s');
             $userCount = $this->getUserCount();
             $commands = $this->loadCommands();
