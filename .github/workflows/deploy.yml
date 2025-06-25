@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_and_deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     env:
@@ -29,7 +29,7 @@ jobs:
     - name: 📦 Install QRCode library (Composer)
       run: composer require endroid/qr-code
 
-    - name: 🧩 Prepare QRCode classes for no-composer hosting
+    - name: 🧩 Prepare QRCode classes
       run: php prepare_qrcode.php
 
     - name: 🔐 Inject secrets into .env
@@ -37,14 +37,14 @@ jobs:
         echo "BOT_TOKEN=${BOT_TOKEN}" >> .env
         echo "ALLOWED_USER_IDS=${ALLOWED_USER_IDS}" >> .env
 
-    - name: 🏗️ Build project
-      run: python3 build.py
-
-    - name: 🚀 Upload to FTP
+    - name: 🚀 Upload via FTP (delete old files except JSONs)
       uses: SamKirkland/FTP-Deploy-Action@v4.0.0
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./build/
+        local-dir: ./
         server-dir: ${{ secrets.FTP_PATH }}/
+        exclude: |
+          data/*.json
+        delete: true
