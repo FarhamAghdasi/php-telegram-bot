@@ -11,6 +11,7 @@ class GetIframeCommand {
     }
 
     public function execute($chatId, $userId, $text) {
+        Logger::info("Checking GetIframeCommand for text: $text");
         // Ensure the user is authorized
         if (!in_array((string)$userId, ALLOWED_USER_IDS)) {
             Logger::error("Access denied for user $userId.");
@@ -20,6 +21,7 @@ class GetIframeCommand {
 
         // Check if the command is /getiframe
         if (strpos($text, '/getiframe') === 0) {
+            Logger::info("GetIframe command matched for user $userId");
             $parts = explode(' ', $text, 2);
 
             // Ensure a URL is provided
@@ -39,6 +41,8 @@ class GetIframeCommand {
                 $error = $result['error'] ?? 'Unknown error occurred.';
                 $this->bot->sendMessage($chatId, "❌ Error: $error");
             }
+        } else {
+            Logger::info("GetIframe command not matched for text: $text");
         }
     }
 

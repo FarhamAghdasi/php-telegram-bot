@@ -3,16 +3,20 @@
 
 require_once __DIR__ . '/../helpers/Logger.php';
 
-class MyInfoCommand {
+class MyInfoCommand
+{
     private $bot;
 
-    public function __construct($bot) {
+    public function __construct($bot)
+    {
         $this->bot = $bot;
     }
 
-    public function execute($chatId, $userId, $text) {
-        // Check if the command is /myinfo
+    public function execute($chatId, $userId, $text)
+    {
+        Logger::info("Checking MyInfoCommand for text: $text");
         if (strpos($text, '/myinfo') !== 0) {
+            Logger::info("MyInfo command not matched for text: $text");
             return;
         }
 
@@ -41,7 +45,7 @@ class MyInfoCommand {
         if (isset($user['bio'])) {  // در صورت وجود بیوگرافی کاربر
             $userInfo .= "📝 <b>Bio:</b> " . htmlspecialchars($user['bio']) . "\n";
         }
-        
+
         // Chat ID Copy Link
         $copyChatIdLink = "<a href=\"https://t.me/share/url?url=" . urlencode($user['id']) . "\">📋 Copy User ID</a>";
 

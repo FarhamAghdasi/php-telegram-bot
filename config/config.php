@@ -16,6 +16,7 @@ loadEnvFile(__DIR__ . '/../.env');
 
 define('BOT_TOKEN', getenv('BOT_TOKEN'));
 define('ALLOWED_USER_IDS', explode(',', getenv('ALLOWED_USER_IDS')));
+Logger::info("Loaded ALLOWED_USER_IDS: " . json_encode(ALLOWED_USER_IDS));
 
 define('MAINTENANCE_MODE', getenv('MAINTENANCE_MODE') === 'true');
 define('IFRAME_EXTRACTOR_URL', getenv('IFRAME_EXTRACTOR_URL'));

@@ -3,20 +3,24 @@
 
 require_once __DIR__ . '/../helpers/Logger.php';
 
-class StartCommand {
+class StartCommand
+{
     private $bot;
 
-    public function __construct($bot) {
+    public function __construct($bot)
+    {
         $this->bot = $bot;
     }
 
-    public function execute($chatId, $userId, $text) {
+    public function execute($chatId, $userId, $text)
+    {
+        Logger::info("Checking StartCommand for text: $text");
         if (strpos($text, '/start') === 0) {
-            Logger::info("Start command executed for chat $chatId by user $userId");
+            Logger::info("Start command matched for user $userId");
             $currentDateTime = date('Y-m-d H:i:s');
             $userCount = $this->getUserCount();
             $commands = $this->loadCommands();
-            
+
             $message = "🌟 Welcome to the Telegram Bot!\n\n";
             $message .= "📅 Date & Time: $currentDateTime\n";
             $message .= "👥 Number of Users: $userCount\n\n";
@@ -25,12 +29,15 @@ class StartCommand {
                 $commandName = str_replace('-', '', $command);
                 $message .= "/$commandName\n";
             }
-            
+
             $this->bot->sendMessage($chatId, $message);
+        } else {
+            Logger::info("Start command not matched for text: $text");
         }
     }
 
-    private function loadCommands() {
+    private function loadCommands()
+    {
         $commandsDir = __DIR__;
         $commandFiles = scandir($commandsDir);
         $commands = [];
@@ -42,8 +49,9 @@ class StartCommand {
         }
         return $commands;
     }
-    
-    private function getUserCount() {
+
+    private function getUserCount()
+    {
         $userFile = __DIR__ . '/../users.txt';
         if (!file_exists($userFile)) {
             return 0;
