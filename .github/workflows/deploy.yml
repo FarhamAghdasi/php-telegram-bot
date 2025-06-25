@@ -14,6 +14,12 @@ jobs:
       FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
       FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
       FTP_PATH: ${{ secrets.FTP_PATH }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+
 
     steps:
     - name: 📥 Checkout repository
@@ -34,9 +40,14 @@ jobs:
 
     - name: 🔐 Inject secrets into .env
       run: |
-        echo "BOT_TOKEN=${BOT_TOKEN}" >> .env
+        echo "BOT_TOKEN=${BOT_TOKEN}" > .env
         echo "ALLOWED_USER_IDS=${ALLOWED_USER_IDS}" >> .env
-
+        echo "DB_HOST=${DB_HOST}" >> .env
+        echo "DB_NAME=${DB_NAME}" >> .env
+        echo "DB_USERNAME=${DB_USERNAME}" >> .env
+        echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
+        echo "WEBHOOK_URL=${WEBHOOK_URL}" >> .env
+    
     - name: 🚀 Upload via FTP (delete old files except JSONs)
       uses: SamKirkland/FTP-Deploy-Action@v4.0.0
       with:
@@ -47,4 +58,4 @@ jobs:
         server-dir: ${{ secrets.FTP_PATH }}/
         exclude: |
           data/*.json
-        delete: true
+          delete: true
